@@ -125,6 +125,8 @@ class EntryController extends Controller {
 			$item->checkout_date = date("d M y, h:i A",strtotime($item->checkout_date));
 
 			$item->show_e_ids = Entry::getEnos($item->type,$item->e_ids);
+			$item->str_checkout_time = strtotime($item->checkout_date);
+			
 
 		}
 

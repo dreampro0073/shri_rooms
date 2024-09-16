@@ -56,14 +56,12 @@
                             <th>Pay Type/Hr</th>
                             <th>Paid Amount</th>
                             <th>Discount Amount</th>
-                            @if(Auth::user()->priv == 1)
-                                <th>#</th>
-                            @endif
+                           
                             <th>#</th>
                         </tr>
                     </thead>
                     <tbody ng-if="entries.length > 0" >
-                        <tr ng-repeat="item in entries " ng-class="{'my_class': item.deleted == 1}">
+                        <tr ng-repeat="item in entries " ng-class="item.check_class">
                             <td>@{{ $index+1 }}</td>
                             <td>@{{ item.unique_id }}</td>
                             <td>@{{ item.show_e_ids }}</td>
@@ -81,14 +79,7 @@
                             
                             <td>@{{ item.sh_paid_amount}}</td>
                             <td>@{{item.discount_amount }}</td>
-                            @if(Auth::user()->priv == 1)
-                            <td>
-                                <div ng-if="item.deleted == 1">
-                                    <span >@{{item.username}},</span>
-                                    <span >@{{item.delete_time}}</span>
-                                </div>
-                            </td>
-                            @endif 
+                            
                             <td>
                                 <a href="javascript:;" ng-click="checkoutLoker(item.id)" class="btn btn-danger btn-sm">Checkout</a>
                                 @if(Auth::user()->priv == 1)

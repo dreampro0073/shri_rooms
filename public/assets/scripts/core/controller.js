@@ -1,5 +1,5 @@
 
-app.controller('entryCtrl', function($scope , $http, $timeout , DBService) {
+app.controller('entryCtrl', function($scope , $http, $timeout , DBService,$interval) {
     $scope.loading = false;
     $scope.formData = {
         name:'',
@@ -37,6 +37,7 @@ app.controller('entryCtrl', function($scope , $http, $timeout , DBService) {
                 $scope.avail_cabins = data.avail_cabins;
                 $scope.avail_beds = data.avail_beds;
                 $scope.hours = data.hours;
+                $scope.updateCheckoutClass();
             }
         });
     }
@@ -354,9 +355,34 @@ app.controller('entryCtrl', function($scope , $http, $timeout , DBService) {
             }
             
         }
-
-
     }
+
+    $scope.updateCheckoutClass = function(){
+        const milliseconds = new Date().getTime();
+        const unixTimestamp = Math.floor(milliseconds / 1000);
+        for (var i = 0; i < $scope.entries.length; i++) {
+            $scope.entries[i].check_class = "";
+            if($scope.entries[i].checkout_status == 0){
+                if(unixTimestamp > $scope.entries[i].str_checkout_time){
+                    $scope.entries[i].check_class = "t-danger";
+                } else {
+                    if((unixTimestamp+1200) > $scope.entries[i].str_checkout_time){
+                        $scope.entries[i].check_class = "t-warning";
+                    } else {
+                        $scope.entries[i].check_class = "t-info";
+                    }
+                }
+            }
+
+        }
+    }
+
+    var intervalPromise = $interval($scope.updateCheckoutClass, 12000);
+    $scope.$on('$destroy', function() {
+        if (intervalPromise) {
+            $interval.cancel(intervalPromise);
+        }
+    });
 });
 
 app.controller('allEntryCtrl', function($scope , $http, $timeout , DBService) {
