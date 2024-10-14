@@ -75,6 +75,9 @@ class EntryController extends Controller {
 			$item->checkout_date = date("d M y, h:i A",strtotime($item->checkout_date));
 
 			$item->show_e_ids = Entry::getEnos($item->type,$item->e_ids);
+			
+			$item->str_checkout_time = strtotime($item->checkout_date);
+
 		}
 
 		$pay_types = Entry::payTypes();
@@ -116,7 +119,7 @@ class EntryController extends Controller {
 			$entries = $entries->where('deleted',0);
 		}
 		
-		$entries = $entries->orderBy('id', "DESC")->get();
+		$entries = $entries->orderBy('id', "DESC")->take(500)->get();
 
 		foreach ($entries as $key => $item) {
 			$bm_amount = DB::table('e_entries')->where('status',0)->where('entry_id','=',$item->id)->sum('paid_amount');
